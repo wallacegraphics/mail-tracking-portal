@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { HttpService } from '@nestjs/axios'
-import { CreateTrackingDto } from './dto/create-tracking.dto'
-import { UpdateTrackingDto } from './dto/update-tracking.dto'
+// import { CreateTrackingDto } from './dto/create-tracking.dto';
+// import { UpdateTrackingDto } from './dto/update-tracking.dto';
 import { AuthService } from 'src/auth/auth.service'
 import { firstValueFrom } from 'rxjs'
 
@@ -9,7 +9,7 @@ import { firstValueFrom } from 'rxjs'
 export class TrackingService {
   constructor(
     private readonly authService: AuthService,
-    private readonly httpService: HttpService
+    private readonly httpService: HttpService,
   ) {}
 
   async getTrackingInfo(id: string) {
@@ -19,12 +19,15 @@ export class TrackingService {
 
     try {
       response = await firstValueFrom(
-        this.httpService.get(`https://iv.usps.com/ivws_api/informedvisapi/api/mt/get/piece/imb/${id}`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
+        this.httpService.get(
+          `https://iv.usps.com/ivws_api/informedvisapi/api/mt/get/piece/imb/${id}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        })
+        ),
       )
 
       console.log('Request Successful')

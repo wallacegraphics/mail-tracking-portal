@@ -41,11 +41,14 @@ export default function TrackingPortal() {
   const [trackingInfo, setTrackingInfo] = useState<TrackingInfo | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  let imb
 
   useEffect(() => {
     const fetchTrackingInfo = async () => {
       const searchParams = new URLSearchParams(window.location.search)
-      const imb = searchParams.get('imb')
+
+      imb = searchParams.get('imb')
+
       setIsLoading(true)
       try {
         const response = await fetch(`http://localhost:4001/api/tracking/${imb}`)
