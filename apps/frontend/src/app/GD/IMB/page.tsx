@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 // NextJS imports
-import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 // MUI imports
 import { Box, Typography, Paper, Container, CircularProgress } from '@mui/material'
@@ -29,6 +28,9 @@ interface TrackingInfo {
       expected_delivery_date: string
       scans: Array<{
         scan_date_time: string
+        scan_facility_city: string
+        scan_facility_state: string
+        mail_phase: string
         // Add other properties of scan if needed
       }>
     }
@@ -39,11 +41,11 @@ export default function TrackingPortal() {
   const [trackingInfo, setTrackingInfo] = useState<TrackingInfo | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const searchParams = useSearchParams()
-  const imb = searchParams.get('imb')
 
   useEffect(() => {
     const fetchTrackingInfo = async () => {
+      const searchParams = new URLSearchParams(window.location.search)
+      const imb = searchParams.get('imb')
       setIsLoading(true)
       try {
         const response = await fetch(`http://localhost:4001/api/tracking/${imb}`)
