@@ -1,7 +1,5 @@
 node_modules/
-.terraform/
-*.tfstate
-*.tfstate.backup
+
 .turbo
 
 .vercel
