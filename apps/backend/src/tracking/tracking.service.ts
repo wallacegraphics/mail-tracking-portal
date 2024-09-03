@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common'
-import { CreateTrackingDto } from './dto/create-tracking.dto'
-import { UpdateTrackingDto } from './dto/update-tracking.dto'
+import { Injectable } from '@nestjs/common';
+// import { CreateTrackingDto } from './dto/create-tracking.dto';
+// import { UpdateTrackingDto } from './dto/update-tracking.dto';
 
 @Injectable()
 export class TrackingService {
@@ -19,7 +19,11 @@ export class TrackingService {
       isAvailable: true,
       latestScan: 'Package arrived at USPS facility in NEW YORK, NY',
       expectedDeliveryDate: '2024-09-01',
-      fullHistory: ['Package departed USPS facility in CHICAGO, IL', 'Package arrived at USPS facility in CHICAGO, IL', 'Shipping label created, USPS awaiting item'],
-    }
+      fullHistory: [
+        'Package departed USPS facility in CHICAGO, IL',
+        'Package arrived at USPS facility in CHICAGO, IL',
+        'Shipping label created, USPS awaiting item',
+      ],
+    };
   }
 }
