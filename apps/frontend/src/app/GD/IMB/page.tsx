@@ -51,7 +51,7 @@ export default function TrackingPortal() {
 
       setIsLoading(true)
       try {
-        const response = await fetch(`http://localhost:4001/api/tracking/${imb}`)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_MAIL_PORTAL_API_DEV}/${imb}`)
         if (!response.ok) {
           throw new Error('Failed to fetch tracking information')
         } else {
@@ -121,21 +121,15 @@ export default function TrackingPortal() {
           <Box sx={{ width: '50%', margin: '20px auto' }}>
             <Typography className="text-base font-semibold font-openSans mb-3">Scan History</Typography>
             {trackingInfo.fullHistory?.data?.scans.map((scan, index) => (
-              <div className="mb-5">
-                <Typography key={scan.scan_date_time} className="text-sm font-openSans mb-2">
-                  {formatDate(scan.scan_date_time).date}
-                </Typography>
+              <div key={`${scan.scan_date_time}-${index}`} className="mb-5">
+                <Typography className="text-sm font-openSans mb-2">{formatDate(scan.scan_date_time).date}</Typography>
                 <hr className="mb-1" />
                 <div className="grid grid-cols-3 w-full">
-                  <Typography key={scan.scan_date_time} className="text-sm font-openSans mb-2 justify-self-start">
-                    {scan.mail_phase}
-                  </Typography>
-                  <Typography key={scan.scan_date_time} className="text-sm font-openSans mb-2 justify-self-center">
+                  <Typography className="text-sm font-openSans mb-2 justify-self-start">{scan.mail_phase}</Typography>
+                  <Typography className="text-sm font-openSans mb-2 justify-self-center">
                     {scan.scan_facility_city}, {scan.scan_facility_state}
                   </Typography>
-                  <Typography key={scan.scan_date_time} className="text-sm font-openSans mb-2 justify-self-end">
-                    {formatDate(scan.scan_date_time).time}
-                  </Typography>
+                  <Typography className="text-sm font-openSans mb-2 justify-self-end">{formatDate(scan.scan_date_time).time}</Typography>
                 </div>
               </div>
             ))}
