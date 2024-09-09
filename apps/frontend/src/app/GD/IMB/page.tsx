@@ -41,6 +41,12 @@ export default function TrackingPortal() {
   const [trackingInfo, setTrackingInfo] = useState<TrackingInfo | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [showFullHistory, setShowFullHistory] = useState(false)
+
+  const toggleFullHistory = () => {
+    setShowFullHistory(!showFullHistory)
+  }
+
   let imb
 
   useEffect(() => {
@@ -56,6 +62,8 @@ export default function TrackingPortal() {
           throw new Error('Failed to fetch tracking information')
         } else {
           const data = await response.json()
+          console.log(data)
+
           data.isAvailable = true
           setTrackingInfo(data)
         }
@@ -112,15 +120,16 @@ export default function TrackingPortal() {
       </Box>
       {trackingInfo.isAvailable ? (
         <>
-          <Box className="text-center" sx={{ width: '50%', margin: '0 auto' }}>
-            <Typography className="text-sm font-openSans">
-              <strong>Your package has shipped. Expected delivery date is:</strong>
+          <Box className="text-center" sx={{ width: '50%', margin: '0 auto', paddingTop: '40px' }}>
+            <Typography className="text-base font-openSans">Your package has shipped. Expected delivery is:</Typography>
+            <Typography className="text-md font-openSans text-red-600 mt-3" sx={{ fontWeight: 'bold' }}>
+              {formatDate(trackingInfo.fullHistory?.data?.expected_delivery_date).date}
             </Typography>
-            <Typography className="text-sm font-openSans">{trackingInfo.fullHistory?.data?.expected_delivery_date}</Typography>
           </Box>
+
           <Box sx={{ width: '50%', margin: '20px auto' }}>
             <Typography className="text-base font-semibold font-openSans mb-3">Scan History</Typography>
-            {trackingInfo.fullHistory?.data?.scans.map((scan, index) => (
+            {trackingInfo.fullHistory?.data?.scans.slice(0, 1).map((scan, index) => (
               <div key={`${scan.scan_date_time}-${index}`} className="mb-5">
                 <Typography className="text-sm font-openSans mb-2">{formatDate(scan.scan_date_time).date}</Typography>
                 <hr className="mb-1" />
@@ -133,6 +142,25 @@ export default function TrackingPortal() {
                 </div>
               </div>
             ))}
+            {showFullHistory &&
+              trackingInfo.fullHistory?.data?.scans.slice(1).map((scan, index) => (
+                <div key={`${scan.scan_date_time}-${index + 1}`} className="mb-5">
+                  <Typography className="text-sm font-openSans mb-2">{formatDate(scan.scan_date_time).date}</Typography>
+                  <hr className="mb-1" />
+                  <div className="grid grid-cols-3 w-full">
+                    <Typography className="text-sm font-openSans mb-2 justify-self-start">{scan.mail_phase}</Typography>
+                    <Typography className="text-sm font-openSans mb-2 justify-self-center">
+                      {scan.scan_facility_city}, {scan.scan_facility_state}
+                    </Typography>
+                    <Typography className="text-sm font-openSans mb-2 justify-self-end">{formatDate(scan.scan_date_time).time}</Typography>
+                  </div>
+                </div>
+              ))}
+            {trackingInfo.fullHistory?.data?.scans && trackingInfo.fullHistory.data.scans.length > 1 && (
+              <button className="text-sky-700" onClick={toggleFullHistory}>
+                {showFullHistory ? 'Hide Full Shipping History' : 'Show Full Shipping History'}
+              </button>
+            )}
           </Box>
         </>
       ) : (

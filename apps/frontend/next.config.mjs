@@ -7,6 +7,12 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
+  webpack: (config, { dev, isServer }) => {
+    if (!isServer) {
+      config.devtool = dev ? 'eval-source-map' : 'source-map'
+    }
+    return config
+  },
 }
 
 export default nextConfig

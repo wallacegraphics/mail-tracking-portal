@@ -1,3 +1,3 @@
-{
-  "extends": ["turbo"]
+module.exports = {
+  extends: ['turbo'],
 }
